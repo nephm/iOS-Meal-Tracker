@@ -19,4 +19,5 @@ struct Ingredient: Identifiable, Codable, Hashable {
         self.carbs = carbs
         self.fats = fats
     }
+    
 }
