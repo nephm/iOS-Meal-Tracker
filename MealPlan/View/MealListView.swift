@@ -53,7 +53,7 @@ struct MealListView: View {
             // Toolbar with Add Meal (+) button
             .toolbar {
                 NavigationLink(destination: AddMealView()) {
-                    Image(systemName: "plus")
+                    Image(systemName: "plus.circle")
                 }
             }
         }

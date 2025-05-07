@@ -21,4 +21,6 @@ struct Meal: Identifiable, Codable {
     var totalCalories: Double {
         totalProtein * 4 + totalCarbs * 4 + totalFats * 9
     }
+    
+    
 }
