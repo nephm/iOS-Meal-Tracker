@@ -2,7 +2,7 @@ import Foundation
 
 // Represents a single food item with macronutrient values
 struct Ingredient: Identifiable, Codable, Hashable {
-    let id: UUID
+    var id = UUID()
     var name: String              // Name of the ingredient, e.g., "Chicken Breast"
     var quantity: String          // Optional description, e.g., "100g" or "1 cup"
 
