@@ -64,6 +64,8 @@ struct EntryView: View {
         .padding(.bottom, 40)
         .fullScreenCover(isPresented: $navigateToMain) {
             MainContentView()
+                .environmentObject(goalVM)
+                .environmentObject(mealVM)
         }
         .sheet(isPresented: $navigateToEditMacro, onDismiss: {
             // Check if macros were set up, and if they were, navigate to main
