@@ -14,7 +14,7 @@ struct MacroMateApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            EntryView()
                 .environmentObject(mealVM)
                 .environmentObject(goalVM)
         }
