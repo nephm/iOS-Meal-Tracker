@@ -37,7 +37,6 @@ struct EntryView: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
-                Spacer()
             } else {
                 // Returning user view
                 Text("Welcome Back to MacroMates!")
