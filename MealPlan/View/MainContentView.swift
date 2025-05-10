@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct ContentView: View {
-    @StateObject var goalVM = MacroGoalViewModel()
-    @StateObject var mealVM = MealViewModel()
+struct MainContentView: View {
+    @EnvironmentObject var goalVM: MacroGoalViewModel
+    @EnvironmentObject var mealVM: MealViewModel
     
     var body: some View {
         TabView {

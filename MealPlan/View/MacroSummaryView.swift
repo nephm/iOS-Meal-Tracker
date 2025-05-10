@@ -89,3 +89,5 @@ struct RingView: View{
         }
     }
 }
+
+#Preview {}
