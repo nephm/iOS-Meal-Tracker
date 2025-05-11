@@ -22,10 +22,24 @@ struct SmartSuggestionView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("📌 Remaining Macros").font(.headline)
 
-                HStack(spacing: 20) {
-                    Text("🍗 Protein: \(Int(remaining.protein))g")
-                    Text("🍞 Carbs: \(Int(remaining.carbs))g")
-                    Text("🥑 Fats: \(Int(remaining.fats))g")
+                HStack(spacing: 30) {
+                    VStack(alignment: .leading) {
+                        Text("🍗 Protein:")
+                        Text("\(Int(remaining.protein))g")
+                            .fontWeight(.semibold)
+                    }
+
+                    VStack(alignment: .leading) {
+                        Text("🍞 Carbs:")
+                        Text("\(Int(remaining.carbs))g")
+                            .fontWeight(.semibold)
+                    }
+
+                    VStack(alignment: .leading) {
+                        Text("🥑 Fats:")
+                        Text("\(Int(remaining.fats))g")
+                            .fontWeight(.semibold)
+                    }
                 }
                 .font(.subheadline)
             }

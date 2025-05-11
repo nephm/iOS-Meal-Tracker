@@ -75,9 +75,11 @@ struct AddMealView: View {
             Text("Add Ingredient")
                 .font(.headline)
 
-            TextField("Name", text: $newIngredientName, onEditingChanged: { editing in
-                showSuggestions = editing
-            })
+            TextField("Name", text: $newIngredientName)
+                .onChange(of: newIngredientName) { _, newValue in
+                    showSuggestions = !newValue.isEmpty
+                }
+
 
             if showSuggestions && !newIngredientName.isEmpty {
                 let filtered = allSuggestions.filter {

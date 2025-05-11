@@ -4,26 +4,43 @@ struct MealListView: View {
     @EnvironmentObject var mealVM: MealViewModel
 
     var body: some View {
-        NavigationView {
+        VStack(spacing: 12) {
+            // MARK: - Date Picker
+            HStack {
+                Spacer()
+
+                DatePicker(
+                    "",
+                    selection: Binding(
+                        get: { MealViewModel.convertToDate(from: mealVM.selectedDate) },
+                        set: { mealVM.setDate($0) }
+                    ),
+                    displayedComponents: .date
+                )
+                .labelsHidden() // ✅ hides "Select Date"
+                .datePickerStyle(.compact)
+                .padding(8)
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                )
+                .accentColor(.blue)
+
+                Spacer()
+            }
+
+            // MARK: - Meal List
             List {
-                // Loop through all meal categories: Breakfast, Lunch, etc.
                 ForEach(MealCategory.allCases) { category in
                     let mealsForCategory = mealVM.meals(for: category)
-
-                    // Show section only if meals exist for that category
                     if !mealsForCategory.isEmpty {
-                        Section(header: Text(category.displayName)
-                            .font(.headline)
-                            .foregroundColor(.primary)) {
-
-                            // Loop through meals in this category
+                        Section(header: Text(category.displayName).font(.headline)) {
                             ForEach(mealsForCategory) { meal in
                                 VStack(alignment: .leading, spacing: 4) {
-                                    // Meal Name (e.g. "Chicken Wrap")
-                                    Text(meal.name)
-                                        .font(.headline)
+                                    Text(meal.name).font(.headline)
 
-                                    // Category and macros shown in multiple Texts
                                     HStack(spacing: 8) {
                                         Text(meal.category.displayName)
                                         Text("•")
@@ -38,23 +55,18 @@ struct MealListView: View {
                                 }
                                 .padding(.vertical, 4)
                             }
-                            // Enable swipe-to-delete
                             .onDelete { indexSet in
-                                let idsToDelete = indexSet.map { mealsForCategory[$0].id }
-                                mealVM.meals.removeAll { idsToDelete.contains($0.id) }
-                                mealVM.saveMeals()
+                                mealVM.deleteMeal(at: indexSet)
                             }
                         }
                     }
                 }
             }
-            .navigationTitle("Your Meals")
-
-            // Toolbar with Add Meal (+) button
-            .toolbar {
-                NavigationLink(destination: AddMealView()) {
-                    Image(systemName: "plus.circle")
-                }
+        }
+        .navigationTitle("Your Meals")
+        .toolbar {
+            NavigationLink(destination: AddMealView()) {
+                Image(systemName: "plus.circle")
             }
         }
     }

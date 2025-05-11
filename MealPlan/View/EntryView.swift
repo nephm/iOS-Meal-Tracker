@@ -85,8 +85,3 @@ struct EntryView: View {
     }
 }
 
-#Preview {
-    EntryView()
-        .environmentObject(MacroGoalViewModel())
-        .environmentObject(MealViewModel())
-}
