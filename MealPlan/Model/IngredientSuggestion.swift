@@ -2,7 +2,7 @@ import SwiftUI
 
 struct IngredientSuggestion: Codable, Identifiable {
     // Attributes
-    let id = UUID()
+    var id = UUID()
     let name: String
     let protein: Double
     let carbs: Double

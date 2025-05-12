@@ -3,7 +3,6 @@ import Foundation
 struct Meal: Identifiable, Codable {
     
     //Attributes
-    
     var id = UUID()
     var name: String
     var category: MealCategory
