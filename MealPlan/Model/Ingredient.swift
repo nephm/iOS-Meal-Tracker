@@ -1,15 +1,16 @@
 import Foundation
 
-// Represents a single food item with macronutrient values
+// Struct to represent a single food item with macronutrient values
 struct Ingredient: Identifiable, Codable, Hashable {
+    //Attributes
     var id = UUID()
-    var name: String              // Name of the ingredient, e.g., "Chicken Breast"
-    var quantity: String          // Optional description, e.g., "100g" or "1 cup"
+    var name: String
+    var quantity: String
 
-    // Macronutrients in grams (per entry)
-    var protein: Double           // e.g., 31g protein
-    var carbs: Double             // e.g., 0g carbs
-    var fats: Double              // e.g., 3.6g fat
+    // Macronutrients attributes
+    var protein: Double
+    var carbs: Double
+    var fats: Double
 
     init(id: UUID = UUID(), name: String, quantity: String, protein: Double, carbs: Double, fats: Double) {
         self.id = id

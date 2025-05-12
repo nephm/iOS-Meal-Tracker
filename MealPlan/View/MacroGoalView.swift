@@ -1,27 +1,32 @@
 import SwiftUI
 
+// This view displays the user’s current macro goals and total daily calories.
+
 struct MacroGoalView: View {
     @EnvironmentObject var goalVM: MacroGoalViewModel
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Your Daily Macro Goals")
-                .font(.largeTitle)
-                .bold()
-                .padding(.top)
+        VStack(alignment: .leading, spacing: 20) {
+            Text("Your Macro Goals")
+                .font(.title2)
+                .fontWeight(.bold)
 
-            VStack(alignment: .leading, spacing: 12) {
-                macroLine("🍗 Protein", value: goalVM.goal.proteinGoal, unit: "g")
-                macroLine("🍞 Carbs", value: goalVM.goal.carbGoal, unit: "g")
-                macroLine("🥑 Fats", value: goalVM.goal.fatGoal, unit: "g")
-                macroLine("🔥 Calories", value: goalVM.goal.totalCalories, unit: "kcal")
+            // Macro goal rows
+            macroLine("🍗 Protein", value: goalVM.goal.proteinGoal, unit: "g")
+            macroLine("🍞 Carbs", value: goalVM.goal.carbGoal, unit: "g")
+            macroLine("🥑 Fats", value: goalVM.goal.fatGoal, unit: "g")
+
+            // Total calories derived from macro values
+            HStack {
+                Text("🔥 Estimated Calories:")
+                Spacer()
+                Text("\(Int(goalVM.goal.totalCalories)) kcal")
+                    .fontWeight(.semibold)
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
 
             Spacer()
 
+            // Button to edit macro goals
             NavigationLink(destination: EditGoalsView()) {
                 Text("Edit Goals")
                     .font(.headline)
@@ -30,23 +35,19 @@ struct MacroGoalView: View {
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(10)
-                    .padding(.horizontal)
             }
-
-            Spacer()
         }
         .padding()
         .navigationTitle("Macro Goals")
     }
 
+    // Helper to display a macro row with value and unit
     func macroLine(_ label: String, value: Double, unit: String) -> some View {
         HStack {
-            Text(label).fontWeight(.semibold)
+            Text(label)
             Spacer()
             Text("\(Int(value)) \(unit)")
+                .fontWeight(.semibold)
         }
-        .font(.title3)
     }
 }
-
-

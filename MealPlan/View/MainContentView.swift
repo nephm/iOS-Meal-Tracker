@@ -1,32 +1,30 @@
 import SwiftUI
 
+// This view contains the main tab navigation for the app.
+// It includes three sections: Meals, Summary, and Goals.
+
 struct MainContentView: View {
-    @EnvironmentObject var goalVM: MacroGoalViewModel
-    @EnvironmentObject var mealVM: MealViewModel
-    
     var body: some View {
         TabView {
-
-            NavigationView {
-                MacroSummaryView()
-                    .environmentObject(mealVM)
-                    .environmentObject(goalVM)
-            }
-            .tabItem {
-                Label("Summary", systemImage: "chart.bar.doc.horizontal")
-            }
-            
+            // Meals tab for viewing and managing meals
             NavigationView {
                 MealListView()
-                    .environmentObject(mealVM)
             }
             .tabItem {
                 Label("Meals", systemImage: "fork.knife")
             }
 
+            // Summary tab showing macro progress and training toggle
+            NavigationView {
+                MacroSummaryView()
+            }
+            .tabItem {
+                Label("Summary", systemImage: "chart.bar")
+            }
+
+            // Goals tab to review or edit macro goals
             NavigationView {
                 MacroGoalView()
-                    .environmentObject(goalVM)
             }
             .tabItem {
                 Label("Goals", systemImage: "target")

@@ -1,9 +1,3 @@
-//
-//  MealCategory.swift
-//  MealPlan
-//
-//  Created by Nadiv Herath on 2025-05-04.
-//
 import Foundation
 
 // Enum to categorize each meal
@@ -13,7 +7,7 @@ enum MealCategory: String, Codable, CaseIterable, Identifiable {
     case dinner
     case snack
 
-    // For use in Picker or ForEach
+    // Conform to identifiable for ID
     var id: String { self.rawValue }
 
     // User-friendly display
@@ -26,13 +20,4 @@ enum MealCategory: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    // Optional: Emoji icon for UI
-    var icon: String {
-        switch self {
-        case .breakfast: return "🍳"
-        case .lunch: return "🥪"
-        case .dinner: return "🍽"
-        case .snack: return "🍎"
-        }
-    }
 }

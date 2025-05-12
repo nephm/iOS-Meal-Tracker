@@ -1,11 +1,16 @@
 import Foundation
 
-// Represents the user's daily macronutrient intake goals
+// Struct to represent the user's daily macronutrient intake goals
 struct MacroGoal: Codable {
-    var proteinGoal: Double     // e.g., 150 grams
-    var carbGoal: Double        // e.g., 250 grams
-    var fatGoal: Double         // e.g., 60 grams
-
+    
+    // MacroNutrient Attribites
+    
+    var proteinGoal: Double
+    var carbGoal: Double
+    var fatGoal: Double
+    
+    // Function to calculate the total calories
+    
     var totalCalories: Double {
         (proteinGoal * 4) + (carbGoal * 4) + (fatGoal * 9)
     }

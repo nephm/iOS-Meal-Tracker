@@ -1,10 +1,7 @@
-//
-//  SmartSuggestionView.swift
-//  MealPlan
-//
-//  Created by Nadiv Herath on 2025-05-06.
-//
 import SwiftUI
+
+// This view shows the top suggested ingredients to help the user meet their remaining macro goals.
+// The user can select suggestions and choose which meal type to add them to.
 
 struct SmartSuggestionView: View {
     @EnvironmentObject var mealVM: MealViewModel
@@ -18,81 +15,67 @@ struct SmartSuggestionView: View {
         let remaining = mealVM.remainingMacros(goal: goalVM.goal)
         let topMatches = bestSuggestions(for: remaining)
 
-        VStack(spacing: 20) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("📌 Remaining Macros").font(.headline)
+        ScrollView {
+            VStack(spacing: 20) {
+                // Remaining macros summary card
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("📌 Remaining Macros").font(.headline)
 
-                HStack(spacing: 30) {
-                    VStack(alignment: .leading) {
-                        Text("🍗 Protein:")
-                        Text("\(Int(remaining.protein))g")
-                            .fontWeight(.semibold)
+                    HStack(spacing: 30) {
+                        macroItem("🍗 Protein", remaining.protein)
+                        macroItem("🍞 Carbs", remaining.carbs)
+                        macroItem("🥑 Fats", remaining.fats)
                     }
-
-                    VStack(alignment: .leading) {
-                        Text("🍞 Carbs:")
-                        Text("\(Int(remaining.carbs))g")
-                            .fontWeight(.semibold)
-                    }
-
-                    VStack(alignment: .leading) {
-                        Text("🥑 Fats:")
-                        Text("\(Int(remaining.fats))g")
-                            .fontWeight(.semibold)
-                    }
+                    .font(.subheadline)
                 }
-                .font(.subheadline)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading) // ✅ Expand full width
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(10)
-            .padding(.horizontal)
-            
-            // Top Matches
-            if topMatches.isEmpty {
-                Text("No suggestions found.")
-                    .foregroundColor(.red)
-            } else {
-                List {
-                    ForEach(topMatches.prefix(3)) { item in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(item.name)
-                                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .padding(.horizontal)
 
-                            HStack {
-                                Text("🍗 \(Int(item.protein))g")
-                                Text("🍞 \(Int(item.carbs))g")
-                                Text("🥑 \(Int(item.fats))g")
-                            }
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                // Suggested ingredients list
+                if topMatches.isEmpty {
+                    Text("No suggestions found.")
+                        .foregroundColor(.red)
+                } else {
+                    VStack(alignment: .leading, spacing: 12) {
+                        ForEach(topMatches.prefix(3)) { item in
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(item.name)
+                                    .font(.headline)
 
-                            Button("➕ Add to Meals") {
-                                selectedSuggestion = item
-                                showMealPicker = true
+                                HStack {
+                                    Text("🍗 \(Int(item.protein))g")
+                                    Text("🍞 \(Int(item.carbs))g")
+                                    Text("🥑 \(Int(item.fats))g")
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+
+                                Button("➕ Add to Meals") {
+                                    selectedSuggestion = item
+                                    showMealPicker = true
+                                }
+                                .font(.footnote)
+                                .frame(maxWidth: .infinity)
+                                .padding(6)
+                                .background(Color.blue.opacity(0.8))
+                                .foregroundColor(.white)
+                                .cornerRadius(6)
                             }
-                            .font(.footnote)
-                            .frame(maxWidth: .infinity)
-                            .padding(6)
-                            .background(Color.blue.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(6)
+                            .padding(.vertical, 4)
                         }
-                        .padding(.vertical, 4)
                     }
                 }
-                .listStyle(InsetGroupedListStyle())
+                Spacer()
             }
-
-            Spacer()
+            .padding()
         }
-        .padding()
         .navigationTitle("Smart Suggestions")
         .onAppear {
             suggestions = loadIngredientSuggestions()
         }
-        // Picker Dialog for Meal Type
         .confirmationDialog("Add to which meal?", isPresented: $showMealPicker, titleVisibility: .visible) {
             ForEach(MealCategory.allCases) { category in
                 Button(category.displayName) {
@@ -104,9 +87,8 @@ struct SmartSuggestionView: View {
                             carbs: suggestion.carbs,
                             fats: suggestion.fats
                         )
-                        let mealName = "\(suggestion.name)"
+                        let mealName = suggestion.name
                         mealVM.addMeal(name: mealName, category: category, ingredients: [ingredient])
-
                     }
                 }
             }
@@ -114,28 +96,36 @@ struct SmartSuggestionView: View {
         }
     }
 
-    // Load from ingredients.json
+    // Displays an individual macro item as label + value
+    private func macroItem(_ label: String, _ value: Double) -> some View {
+        VStack(alignment: .leading) {
+            Text(label)
+            Text("\(Int(value))g").bold()
+        }
+    }
+
+    // Load the JSON file of ingredient suggestions
     private func loadIngredientSuggestions() -> [IngredientSuggestion] {
         guard let url = Bundle.main.url(forResource: "ingredients", withExtension: "json") else {
             print("ingredients.json not found")
             return []
         }
+        // Error handling to load the JSON file
         do {
             let data = try Data(contentsOf: url)
             return try JSONDecoder().decode([IngredientSuggestion].self, from: data)
         } catch {
-            print("Failed to load ingredient suggestions: \(error)")
+            print("Failed to decode suggestions: \(error)")
             return []
         }
     }
 
-    // Suggest top ingredients based on remaining macros
+    // Calculates best matching suggestions based on remaining macros
     private func bestSuggestions(for target: MacroBreakdown) -> [IngredientSuggestion] {
         let scored = suggestions.map { item in
-            let score =
-                abs(target.protein - item.protein) +
-                abs(target.carbs - item.carbs) +
-                abs(target.fats - item.fats)
+            let score = abs(target.protein - item.protein) +
+                        abs(target.carbs - item.carbs) +
+                        abs(target.fats - item.fats)
             return (item, score)
         }
 
